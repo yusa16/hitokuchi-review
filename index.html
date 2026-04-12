@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一口馬主レビュー</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: sans-serif; background: #f5f5f0; }
+
+.site-header {
+  padding: 1.2rem 2rem 0.8rem;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+.site-title { font-size: 26px; font-weight: 500; color: #222; letter-spacing: -0.5px; }
+.site-title span { color: #B85C38; }
+
+.ad-banner {
+  margin: 1.2rem 2rem;
+  background: #eee;
+  border: 1px dashed #ccc;
+  border-radius: 12px;
+  height: 90px;
+  display: flex; align-items: center; justify-content: center;
+  color: #999;
+  font-size: 13px;
+}
+
+.search-panel {
+  margin: 0 2rem 1rem;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+
+.filter-section { margin-bottom: 0.8rem; }
+.filter-label {
+  font-size: 12px; color: #666;
+  margin-bottom: 6px; font-weight: 500;
+}
+
+.club-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+.club-btn {
+  font-size: 12px; padding: 3px 10px;
+  border-radius: 99px;
+  border: 1px solid #ccc;
+  background: #fff; color: #333;
+  cursor: pointer; transition: all 0.15s;
+  white-space: nowrap;
+}
+.club-btn:hover { background: #f5f5f5; }
+.club-btn.active { background: #B85C38; border-color: #B85C38; color: #fff; }
+
+.year-grid { display: flex; gap: 6px; flex-wrap: wrap; }
+.year-btn {
+  font-size: 12px; padding: 4px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fff; color: #333;
+  cursor: pointer; transition: all 0.15s;
+  text-align: center; line-height: 1.4;
+}
+.year-btn:hover { background: #f5f5f5; }
+.year-btn.active { background: #2C5F8A; border-color: #2C5F8A; color: #fff; }
+.year-btn .age { font-size: 11px; opacity: 0.8; display: block; }
+
+.search-btn {
+  display: block; margin: 0.8rem auto 0;
+  padding: 7px 40px;
+  background: #B85C38; color: #fff;
+  border: none; border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.search-btn:hover { opacity: 0.85; }
+
+.table-wrap {
+  margin: 0 2rem 2rem;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { background: #f9f9f7; border-bottom: 1px solid #e0e0e0; }
+th {
+  padding: 9px 10px; text-align: left;
+  font-weight: 500; font-size: 12px; color: #666;
+  white-space: nowrap; cursor: pointer; user-select: none;
+}
+th:hover { color: #333; }
+th .sort-arrow { margin-left: 3px; opacity: 0.4; font-size: 10px; }
+th.sorted .sort-arrow { opacity: 1; color: #B85C38; }
+
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #222; vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafaf8; }
+
+.no-col { width: 40px; text-align: center; color: #999; font-size: 12px; }
+.price-col { text-align: right; white-space: nowrap; }
+.gender-col { text-align: center; font-weight: 500; }
+.region-col { text-align: center; white-space: nowrap; }
+.score-col { text-align: center; font-weight: 500; }
+.result-col { text-align: center; }
+
+.grade-badge {
+  display: inline-block;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  line-height: 24px; text-align: center;
+  font-weight: 500; font-size: 13px;
+}
+.grade-S { background: #D4AF37; color: #5C3D00; }
+.grade-A { background: #F4C0D1; color: #72243E; }
+.grade-B { background: #E24B4A; color: #fff; }
+.grade-C { background: #E8873A; color: #fff; }
+.grade-D { background: #E8C832; color: #5C4200; }
+.grade-E { background: #639922; color: #fff; }
+.grade-F { background: #378ADD; color: #fff; }
+.grade-empty { background: #eee; color: #999; font-size: 11px; }
+
+.gender-牡 { color: #185FA5; }
+.gender-牝 { color: #993556; }
+.gender-騸 { color: #222; }
+
+.region-tag {
+  font-size: 11px; padding: 2px 6px;
+  border-radius: 99px;
+  background: #f0f0f0; color: #666;
+  border: 1px solid #ddd;
+}
+.region-栗東 { background: #FAECE7; color: #993C1D; border-color: #F0997B; }
+.region-美浦 { background: #E6F1FB; color: #185FA5; border-color: #85B7EB; }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="site-title">一口馬主<span>レビュー</span></div>
+</div>
+
+<div class="ad-banner">広告スペース</div>
+
+<div class="search-panel">
+  <div class="filter-section">
+    <div class="filter-label">所属クラブ（50音順）</div>
+    <div class="club-grid" id="clubGrid"></div>
+  </div>
+  <div class="filter-section">
+    <div class="filter-label">世代（馬齢）</div>
+    <div class="year-grid" id="yearGrid"></div>
+  </div>
+  <button class="search-btn" onclick="doSearch()">検索</button>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th class="no-col">No.</th>
+        <th onclick="sortTable(this,'dam')">母名 <span class="sort-arrow">↕</span></th>
+        <th onclick="sortTable(this,'sire')">父名 <span class="sort-arrow">↕</span></th>
+        <th class="gender-col">性別</th>
+        <th class="price-col" onclick="sortTable(this,'price')">募集額(万) <span class="sort-arrow">↕</span></th>
+        <th class="region-col">所属</th>
+        <th onclick="sortTable(this,'stable')">厩舎 <span class="sort-arrow">↕</span></th>
+        <th class="score-col" onclick="sortTable(this,'grade')">評価 <span class="sort-arrow">↕</span></th>
+        <th></th>
+        <th class="result-col" onclick="sortTable(this,'result')">結果 <span class="sort-arrow">↕</span></th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<script>
+const clubs = ['インゼル','ウイン','キャロット','京都','グリーン','サンデー','社台','シルク','G1サラ','大樹','ターファイト','DMM','東京','ノルマンディ','広尾','Blooming','友駿','ユニオン','ライオン','ラフィアン','ロード','ローレル','YGG','ワラウカド'];
+const years = [
+  {year:2024,age:2},{year:2023,age:3},{year:2022,age:4},{year:2021,age:5},
+  {year:2020,age:6},{year:2019,age:7},{year:2018,age:8},{year:2017,age:9}
+];
+
+let selectedClub = null;
+let selectedYear = null;
+let sortCol = null;
+let sortAsc = true;
+let tableData = [];
+
+const clubGrid = document.getElementById('clubGrid');
+clubs.forEach(c => {
+  const btn = document.createElement('button');
+  btn.className = 'club-btn';
+  btn.textContent = c;
+  btn.onclick = () => {
+    document.querySelectorAll('.club-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedClub = c;
+  };
+  clubGrid.appendChild(btn);
+});
+
+const yearGrid = document.getElementById('yearGrid');
+years.forEach(y => {
+  const btn = document.createElement('button');
+  btn.className = 'year-btn';
+  btn.innerHTML = y.year + '年産<span class="age">（' + y.age + '歳）</span>';
+  btn.onclick = () => {
+    document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedYear = y.year;
+  };
+  yearGrid.appendChild(btn);
+});
+
+function doSearch() {
+  tableData = [];
+  renderTable();
+}
+
+function gradeClass(g) {
+  return g ? 'grade-' + g : 'grade-empty';
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  if (tableData.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:2rem;color:#999;font-size:13px;">クラブと世代を選択して検索してください</td></tr>';
+    return;
+  }
+  tbody.innerHTML = tableData.map(h => '<tr>' +
+    '<td class="no-col">' + h.number + '</td>' +
+    '<td>' + h.dam + '</td>' +
+    '<td style="color:#666">' + h.sire + '</td>' +
+    '<td class="gender-col gender-' + h.gender + '">' + h.gender + '</td>' +
+    '<td class="price-col">' + (h.total_price / h.shares).toFixed(1) + '</td>' +
+    '<td class="region-col"><span class="region-tag region-' + h.region + '">' + h.region + '</span></td>' +
+    '<td>' + h.stable + '</td>' +
+    '<td class="score-col"><span class="grade-badge ' + gradeClass(h.grade) + '">' + (h.grade || '-') + '</span></td>' +
+    '<td class="score-col" style="color:#999;font-size:12px;">(' + h.score + ')</td>' +
+    '<td class="result-col">' + (h.result ? '<span class="grade-badge ' + gradeClass(h.result) + '">' + h.result + '</span>' : '<span style="color:#ccc;font-size:11px;">-</span>') + '</td>' +
+    '</tr>'
+  ).join('');
+}
+
+function sortTable(thEl, col) {
+  document.querySelectorAll('th').forEach(th => {
+    th.classList.remove('sorted');
+    const arr = th.querySelector('.sort-arrow');
+    if (arr) arr.textContent = '↕';
+  });
+  if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
+  thEl.classList.add('sorted');
+  const arrow = thEl.querySelector('.sort-arrow');
+  if (arrow) arrow.textContent = sortAsc ? '↑' : '↓';
+  const gradeOrder = {S:0,A:1,B:2,C:3,D:4,E:5,F:6,'':7};
+  tableData.sort((a, b) => {
+    let va = a[col], vb = b[col];
+    if (col === 'grade' || col === 'result') {
+      va = gradeOrder[va] ?? 7; vb = gradeOrder[vb] ?? 7;
+      return sortAsc ? va - vb : vb - va;
+    }
+    if (typeof va === 'string') return sortAsc ? va.localeCompare(vb,'ja') : vb.localeCompare(va,'ja');
+    return sortAsc ? va - vb : vb - va;
+  });
+  renderTable();
+}
+
+renderTable();
+</script>
+</body>
+</html>
