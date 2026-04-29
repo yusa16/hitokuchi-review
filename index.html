@@ -243,15 +243,16 @@ async function doSearch() {
     + '&year=eq.' + selectedYear
     + '&order=number';
 
-  const [horsesRes, siresRes, stablesRes] = await Promise.all([
-    fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }),
-    fetch(SUPABASE_URL + '/rest/v1/sires?select=id,name', { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }),
-    fetch(SUPABASE_URL + '/rest/v1/stables?select=id,name,location&limit=2000', { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } })
-  ]);
+const [horsesRes, siresRes, stablesRes1, stablesRes2] = await Promise.all([
+  fetch(url, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }),
+  fetch(SUPABASE_URL + '/rest/v1/sires?select=id,name&limit=1000', { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }),
+  fetch(SUPABASE_URL + '/rest/v1/stables?select=id,name,location&limit=1000&offset=0', { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }),
+  fetch(SUPABASE_URL + '/rest/v1/stables?select=id,name,location&limit=1000&offset=1000', { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } })
+]);
 
-  const horses = await horsesRes.json();
-  const sires = await siresRes.json();
-  const stables = await stablesRes.json();
+const horses = await horsesRes.json();
+const sires = await siresRes.json();
+const stables = [...await stablesRes1.json(), ...await stablesRes2.json()];
 
   const sireMap = {};
   sires.forEach(s => { sireMap[s.id] = s.name; });
